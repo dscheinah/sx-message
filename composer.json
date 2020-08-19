@@ -1,0 +1,29 @@
+{
+    "name": "dscheinah/sx-message",
+    "description": "A PSR-7 and PSR-17 message implementation with response generators.",
+    "type": "library",
+    "license": "GPL-3.0-or-later",
+    "require": {
+        "php": "^7.3",
+        "psr/http-message": "^1.0",
+        "dscheinah/sx-container": "^1.0",
+        "psr/http-factory": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sx\\Message\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Sx\\MessageTest\\": "test/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+    }
+}
