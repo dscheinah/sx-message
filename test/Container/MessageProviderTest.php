@@ -1,6 +1,8 @@
 <?php
 namespace Sx\MessageTest\Container;
 
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Sx\Container\Injector;
 use Sx\Message\Container\MessageProvider;
 use PHPUnit\Framework\TestCase;
@@ -16,5 +18,7 @@ class MessageProviderTest extends TestCase
         $provider->provide($injector);
         self::assertTrue($injector->has(Json::class));
         self::assertTrue($injector->has(ResponseHelperInterface::class));
+        self::assertTrue($injector->has(ResponseFactoryInterface::class));
+        self::assertTrue($injector->has(StreamFactoryInterface::class));
     }
 }
