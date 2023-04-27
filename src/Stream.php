@@ -45,7 +45,7 @@ class Stream implements StreamInterface
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         if (!$this->resource) {
             return '';

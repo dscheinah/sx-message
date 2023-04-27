@@ -41,7 +41,7 @@ class Response extends Message implements ResponseInterface
      *
      * @return ResponseInterface|Response
      */
-    public function withStatus($code, $reasonPhrase = '')
+    public function withStatus($code, $reasonPhrase = ''): ResponseInterface
     {
         $response = clone $this;
         $response->statusCode = $code;

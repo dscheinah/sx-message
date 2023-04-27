@@ -85,7 +85,7 @@ class Uri implements UriInterface
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         $scheme = $this->getScheme();
         $authority = $this->getAuthority();
@@ -225,7 +225,7 @@ class Uri implements UriInterface
      *
      * @return UriInterface|Uri
      */
-    public function withScheme($scheme)
+    public function withScheme($scheme): UriInterface
     {
         $uri = clone $this;
         $uri->scheme = strtolower($scheme);
@@ -240,7 +240,7 @@ class Uri implements UriInterface
      *
      * @return UriInterface|Uri
      */
-    public function withUserInfo($user, $password = null)
+    public function withUserInfo($user, $password = null): UriInterface
     {
         $uri = clone $this;
         $uri->user = $user;
@@ -255,7 +255,7 @@ class Uri implements UriInterface
      *
      * @return UriInterface|Uri
      */
-    public function withHost($host)
+    public function withHost($host): UriInterface
     {
         $uri = clone $this;
         $uri->host = $host;
@@ -269,7 +269,7 @@ class Uri implements UriInterface
      *
      * @return UriInterface|Uri
      */
-    public function withPort($port)
+    public function withPort($port): UriInterface
     {
         $uri = clone $this;
         $uri->port = (int)$port;
@@ -283,7 +283,7 @@ class Uri implements UriInterface
      *
      * @return UriInterface|Uri
      */
-    public function withPath($path)
+    public function withPath($path): UriInterface
     {
         $uri = clone $this;
         $uri->path = $path;
@@ -297,7 +297,7 @@ class Uri implements UriInterface
      *
      * @return UriInterface|Uri
      */
-    public function withQuery($query)
+    public function withQuery($query): UriInterface
     {
         $uri = clone $this;
         $uri->query = $query;
@@ -311,7 +311,7 @@ class Uri implements UriInterface
      *
      * @return UriInterface|Uri
      */
-    public function withFragment($fragment)
+    public function withFragment($fragment): UriInterface
     {
         $uri = clone $this;
         $uri->fragment = $fragment;

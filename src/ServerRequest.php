@@ -88,7 +88,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return ServerRequestInterface|ServerRequest
      */
-    public function withCookieParams(array $cookies)
+    public function withCookieParams(array $cookies): ServerRequestInterface
     {
         $request = clone $this;
         $request->cookieParams = $cookies;
@@ -112,7 +112,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return ServerRequestInterface|ServerRequest
      */
-    public function withQueryParams(array $query)
+    public function withQueryParams(array $query): ServerRequestInterface
     {
         $request = clone $this;
         $request->queryParams = $query;
@@ -136,7 +136,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return ServerRequestInterface|ServerRequest
      */
-    public function withUploadedFiles(array $uploadedFiles)
+    public function withUploadedFiles(array $uploadedFiles): ServerRequestInterface
     {
         $request = clone $this;
         $request->uploads = $uploadedFiles;
@@ -160,7 +160,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return ServerRequestInterface|ServerRequest
      */
-    public function withParsedBody($data)
+    public function withParsedBody($data): ServerRequestInterface
     {
         $request = clone $this;
         $request->parsedBody = $data;
@@ -199,7 +199,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return ServerRequestInterface|ServerRequest
      */
-    public function withAttribute($name, $value)
+    public function withAttribute($name, $value): ServerRequestInterface
     {
         $request = clone $this;
         $request->attributes[$name] = $value;
@@ -213,7 +213,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return ServerRequestInterface|ServerRequest
      */
-    public function withoutAttribute($name)
+    public function withoutAttribute($name): ServerRequestInterface
     {
         $request = clone $this;
         unset($request->attributes[$name]);

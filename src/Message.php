@@ -57,7 +57,7 @@ class Message implements MessageInterface
      *
      * @return MessageInterface|Message
      */
-    public function withProtocolVersion($version)
+    public function withProtocolVersion($version): MessageInterface
     {
         $message = clone $this;
         $message->version = (string) $version;
@@ -126,7 +126,7 @@ class Message implements MessageInterface
      *
      * @return MessageInterface|Message
      */
-    public function withHeader($name, $value)
+    public function withHeader($name, $value): MessageInterface
     {
         // Allow a string to be set, but ensure to store values as an array.
         if (!is_array($value)) {
@@ -159,7 +159,7 @@ class Message implements MessageInterface
      *
      * @return MessageInterface|Message
      */
-    public function withAddedHeader($name, $value)
+    public function withAddedHeader($name, $value): MessageInterface
     {
         // Get the already set header.
         $header = $this->getHeader($name);
@@ -186,7 +186,7 @@ class Message implements MessageInterface
      *
      * @return MessageInterface|Message
      */
-    public function withoutHeader($name)
+    public function withoutHeader($name): MessageInterface
     {
         $message = clone $this;
         unset($message->mapper[strtolower($name)], $message->headers[$name]);
@@ -196,9 +196,9 @@ class Message implements MessageInterface
     /**
      * Returns the currently set body as a stream if it was set before.
      *
-     * @return StreamInterface|null
+     * @return StreamInterface
      */
-    public function getBody(): ?StreamInterface
+    public function getBody(): StreamInterface
     {
         return $this->body;
     }
@@ -210,7 +210,7 @@ class Message implements MessageInterface
      *
      * @return MessageInterface|Message
      */
-    public function withBody(StreamInterface $body)
+    public function withBody(StreamInterface $body): MessageInterface
     {
         $message = clone $this;
         $message->body = $body;

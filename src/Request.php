@@ -47,7 +47,7 @@ class Request extends Message implements RequestInterface
      *
      * @return RequestInterface|Request
      */
-    public function withRequestTarget($requestTarget)
+    public function withRequestTarget($requestTarget): RequestInterface
     {
         $request = clone $this;
         $request->target = (string) $requestTarget;
@@ -71,7 +71,7 @@ class Request extends Message implements RequestInterface
      *
      * @return RequestInterface|Request
      */
-    public function withMethod($method)
+    public function withMethod($method): RequestInterface
     {
         $request = clone $this;
         $request->method = strtolower($method);
@@ -96,7 +96,7 @@ class Request extends Message implements RequestInterface
      *
      * @return RequestInterface|Request
      */
-    public function withUri(UriInterface $uri, $preserveHost = false)
+    public function withUri(UriInterface $uri, $preserveHost = false): RequestInterface
     {
         $request = null;
         $host = $uri->getHost();
