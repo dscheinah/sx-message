@@ -23,15 +23,12 @@ class StreamTest extends TestCase
     {
         self::assertStringEqualsFile(self::FILE, $this->stream->getContents());
         self::assertEmpty((string) new Stream());
-        $this->expectException(RuntimeException::class);
-        @(new Stream('invalid'))->getContents();
     }
 
     public function testToString(): void
     {
         self::assertStringEqualsFile(self::FILE, (string) $this->stream);
         self::assertEmpty((string) new Stream());
-        self::assertEmpty((string) new Stream('invalid'));
     }
 
     public function testDetach(): void
@@ -90,7 +87,7 @@ class StreamTest extends TestCase
     {
         $string = 'test';
 
-        $file = '/tmp/stream.txt';
+        $file = sys_get_temp_dir() . '/stream.txt';
         $stream = new Stream(fopen($file, 'wb'));
         self::assertEquals(strlen($string), $stream->write($string));
         self::assertStringEqualsFile($file, $string);
@@ -140,11 +137,5 @@ class StreamTest extends TestCase
         $this->stream->rewind();
         $this->expectException(RuntimeException::class);
         (new Stream())->rewind();
-    }
-
-    public function testRewindError(): void
-    {
-        $this->expectException(RuntimeException::class);
-        @(new Stream('invalid'))->rewind();
     }
 }

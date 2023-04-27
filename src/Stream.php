@@ -91,7 +91,7 @@ class Stream implements StreamInterface
         if ($this->stats === null && $this->resource) {
             $this->stats = fstat($this->resource);
         }
-        return $this->stats['size'] ? (int)$this->stats['size'] : null;
+        return isset($this->stats['size']) ? (int) $this->stats['size'] : null;
     }
 
     /**
@@ -182,7 +182,7 @@ class Stream implements StreamInterface
         if (!$this->resource) {
             return 0;
         }
-        $bytes = fwrite($this->resource, $string);
+        $bytes = @fwrite($this->resource, $string);
         // Read only resources return 0 bytes, so also detect this as a failure.
         if ($bytes === false || ($string && !$bytes)) {
             throw new RuntimeException('unable to write to stream ' . $this->getMetadata('uri'));
