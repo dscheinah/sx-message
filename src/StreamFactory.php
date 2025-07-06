@@ -18,8 +18,9 @@ class StreamFactory implements StreamFactoryInterface
      */
     public function createStream(string $content = ''): StreamInterface
     {
-        // Use a in memory file stream to abstract the string to a file resource usable by Stream.
+        // Use an in-memory file stream to abstract the string to a file resource usable by Stream.
         $resource = fopen('php://memory', 'rb+');
+        assert(is_resource($resource));
         $stream = $this->createStreamFromResource($resource);
         if ($content) {
             // Fill the Stream with content if given.
@@ -39,10 +40,11 @@ class StreamFactory implements StreamFactoryInterface
      */
     public function createStreamFromFile(string $filename, string $mode = 'rb'): StreamInterface
     {
-        // Open the file but allow temporary files to always return an usable Stream.
+        // Open the file but allow temporary files to always return a usable Stream.
         $file = $filename ? fopen($filename, $mode) : false;
         if (!$file) {
             $file = fopen('php://temp', $mode);
+            assert(is_resource($file));
         }
         return $this->createStreamFromResource($file);
     }

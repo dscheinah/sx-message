@@ -13,21 +13,21 @@ use Psr\Http\Message\UriInterface;
 class ServerRequestFactory extends ServerRequest implements ServerRequestFactoryInterface
 {
     /**
-     * The factory to create an URI from string.
+     * The factory to create a URI from string.
      *
      * @var UriFactoryInterface
      */
-    protected $uriFactory;
+    protected UriFactoryInterface $uriFactory;
 
     /**
-     * Creates the factory with an URI factory to creates URIs from string,
+     * Creates the factory with a URI factory to create URIs from string.
      *
      * @param UriFactoryInterface $uriFactory
      */
     public function __construct(UriFactoryInterface $uriFactory)
     {
         // The parent call is just to avoid bad practice.
-        parent::__construct([]);
+        parent::__construct();
         $this->uriFactory = $uriFactory;
     }
 
@@ -36,16 +36,16 @@ class ServerRequestFactory extends ServerRequest implements ServerRequestFactory
      * to the request and are used to set headers.
      * This factory currently does not support file uploads and only parses the body by using the POST super global.
      *
-     * @param string              $method
+     * @param string $method
      * @param UriInterface|string $uri
-     * @param array               $serverParams
+     * @param array<mixed> $serverParams
      *
      * @return ServerRequestInterface
      */
     public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
         $request = new ServerRequest($serverParams);
-        // If the URI is provided as a string it must be converted using the factory.
+        // If the URI is provided as a string, it must be converted using the factory.
         if (!$uri instanceof UriInterface) {
             $uri = $this->uriFactory->createUri($uri);
         }
@@ -59,9 +59,9 @@ class ServerRequestFactory extends ServerRequest implements ServerRequestFactory
         foreach ($serverParams as $key => $value) {
             if ($value && strpos($key, 'HTTP_') === 0) {
                 $name = substr($key, 5);
-                $headers[$name] = is_array($value) ? $value : [$value];
+                $headers[$name] = (array) $value;
                 // Convert the underscore from the web servers conversion to the canonical minus.
-                // Also fill the insensitive mapper as no withHeader is used.
+                // Also fill the insensitive mapper as no "withHeader" is used.
                 $mapper[str_replace('_', '-', strtolower($name))] = $name;
             }
         }

@@ -14,21 +14,21 @@ class Request extends Message implements RequestInterface
      *
      * @var string
      */
-    protected $target = '';
+    protected string $target = '';
 
     /**
      * The method of the request.
      *
      * @var string
      */
-    protected $method = '';
+    protected string $method = '';
 
     /**
      * The URI of the request.
      *
      * @var UriInterface
      */
-    protected $uri;
+    protected UriInterface $uri;
 
     /**
      * Returns the current target.
@@ -45,12 +45,12 @@ class Request extends Message implements RequestInterface
      *
      * @param string $requestTarget
      *
-     * @return RequestInterface|Request
+     * @return RequestInterface
      */
-    public function withRequestTarget($requestTarget): RequestInterface
+    public function withRequestTarget(string $requestTarget): RequestInterface
     {
         $request = clone $this;
-        $request->target = (string) $requestTarget;
+        $request->target = $requestTarget;
         return $request;
     }
 
@@ -69,9 +69,9 @@ class Request extends Message implements RequestInterface
      *
      * @param string $method
      *
-     * @return RequestInterface|Request
+     * @return RequestInterface
      */
-    public function withMethod($method): RequestInterface
+    public function withMethod(string $method): RequestInterface
     {
         $request = clone $this;
         $request->method = strtolower($method);
@@ -89,25 +89,27 @@ class Request extends Message implements RequestInterface
     }
 
     /**
-     * Sets the URI on a new request instance. The host header will used from the URIs host if preserveHost ist false.
+     * Sets the URI on a new request instance. The host header will be used from the URIs host if preserveHost ist false.
      *
      * @param UriInterface $uri
      * @param bool         $preserveHost
      *
-     * @return RequestInterface|Request
+     * @return RequestInterface
      */
-    public function withUri(UriInterface $uri, $preserveHost = false): RequestInterface
+    public function withUri(UriInterface $uri, bool $preserveHost = false): RequestInterface
     {
         $request = null;
         $host = $uri->getHost();
         if (!$preserveHost) {
-            // If the host shall not be preserved it is replaced from the URI if available.
+            // If the host shall not be preserved, it is replaced from the URI if available.
             if ($host) {
                 $request = $this->withHeader(self::HEADER_HOST, $host);
+                assert($request instanceof self);
             }
         } elseif ($host && !$this->getHeader(self::HEADER_HOST)) {
-            // If the request does not have a host header the URIs host will also be applied.
+            // If the request does not have a host header, the URIs host will also be applied.
             $request = $this->withHeader(self::HEADER_HOST, $host);
+            assert($request instanceof self);
         }
         // Since the withHeader function above already cloned the request do it only if needed.
         if (!$request) {

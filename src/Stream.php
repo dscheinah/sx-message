@@ -12,23 +12,23 @@ class Stream implements StreamInterface
     /**
      * The current underlying stream resource.
      *
-     * @var resource
+     * @var resource|null
      */
     protected $resource;
 
     /**
      * The cache for the fstat call. Initialized with null to also cache empty results.
      *
-     * @var array
+     * @var array<int|string, int>|null
      */
-    private $stats;
+    private ?array $stats = null;
 
     /**
      * The cache for the stream_get_meta_data call. Initialized with null to also cache empty results.
      *
-     * @var array
+     * @var array<string, mixed>|null
      */
-    private $metadata;
+    private ?array $metadata = null;
 
     /**
      * Creates a stream for the given resource.
@@ -89,7 +89,7 @@ class Stream implements StreamInterface
     {
         // Load the size from fstat but cache it to avoid unnecessary operation.
         if ($this->stats === null && $this->resource) {
-            $this->stats = fstat($this->resource);
+            $this->stats = fstat($this->resource) ?: null;
         }
         return isset($this->stats['size']) ? (int) $this->stats['size'] : null;
     }
@@ -116,7 +116,7 @@ class Stream implements StreamInterface
      */
     public function eof(): bool
     {
-        return $this->resource ? feof($this->resource) : true;
+        return !$this->resource || feof($this->resource);
     }
 
     /**
@@ -126,7 +126,7 @@ class Stream implements StreamInterface
      */
     public function isSeekable(): bool
     {
-        return (bool)$this->getMetadata('seekable');
+        return (bool) $this->getMetadata('seekable');
     }
 
     /**
@@ -137,7 +137,7 @@ class Stream implements StreamInterface
      *
      * @throws RuntimeException
      */
-    public function seek($offset, $whence = SEEK_SET): void
+    public function seek(int $offset, int $whence = SEEK_SET): void
     {
         if (!$this->resource || fseek($this->resource, $offset, $whence) < 0) {
             throw new RuntimeException('unable to seek in stream ' . $this->getMetadata('uri'));
@@ -177,13 +177,13 @@ class Stream implements StreamInterface
      * @return int
      * @throws RuntimeException
      */
-    public function write($string): int
+    public function write(string $string): int
     {
         if (!$this->resource) {
             return 0;
         }
         $bytes = @fwrite($this->resource, $string);
-        // Read only resources return 0 bytes, so also detect this as a failure.
+        // Read-only resources return 0 bytes, so also detect this as a failure.
         if ($bytes === false || ($string && !$bytes)) {
             throw new RuntimeException('unable to write to stream ' . $this->getMetadata('uri'));
         }
@@ -205,12 +205,12 @@ class Stream implements StreamInterface
     /**
      * Read length bytes data from the Stream.
      *
-     * @param int $length
+     * @param positive-int $length
      *
      * @return string
      * @throws RuntimeException
      */
-    public function read($length): string
+    public function read(int $length): string
     {
         $result = $this->resource ? fread($this->resource, $length) : false;
         if ($result === false) {
@@ -229,32 +229,32 @@ class Stream implements StreamInterface
     {
         $content = $this->resource ? stream_get_contents($this->resource) : '';
         if ($content === false) {
-            throw new RuntimeException('unable to get contents of stream ' . $this->getMetadata('uri'));
+            throw new RuntimeException('unable to get the contents of stream ' . $this->getMetadata('uri'));
         }
         return $content;
     }
 
     /**
-     * Loads all or selected meta data from the Stream. The available keys match stream_get_meta_data.
+     * Loads all or selected metadata from the Stream. The available keys match stream_get_meta_data.
      *
      * @param string|null $key
      *
      * @return mixed|null
      */
-    public function getMetadata($key = null)
+    public function getMetadata(?string $key = null)
     {
         if (!$this->resource) {
             return null;
         }
-        // Load the meta data but cache it to prevent unnecessary calls to stream_get_meta_data.
+        // Load the metadata but cache it to prevent unnecessary calls to stream_get_meta_data.
         if ($this->metadata === null) {
             $this->metadata = stream_get_meta_data($this->resource);
         }
-        // If a key is given return the value (or null) for the key.
+        // If a key is given, return the value (or null) for the key.
         if ($key !== null) {
             return $this->metadata[$key] ?? null;
         }
-        // Only return all meta data if no key is given.
+        // Only return all metadata if no key is given.
         return $this->metadata;
     }
 }

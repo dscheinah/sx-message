@@ -21,9 +21,9 @@ class UriFactory extends Uri implements UriFactoryInterface
     {
         $instance = new Uri();
         // Parse the string using the PHP built-in. It matches the internal naming of the Uri instance.
-        foreach (parse_url($uri) as $key => $value) {
-            // If for some reason parse_url returns more parts than available.
-            if (isset($instance->$key)) {
+        foreach (parse_url($uri) ?: [] as $key => $value) {
+            // If for some reason, parse_url returns more parts than available.
+            if (property_exists($instance, $key)) {
                 // Access the protected properties to avoid implementing setters or cloning by calling with...
                 // This works as the factory extends the Response just for this reason.
                 $instance->$key = $value;

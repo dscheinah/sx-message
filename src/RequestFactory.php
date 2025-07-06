@@ -13,11 +13,11 @@ use Psr\Http\Message\UriFactoryInterface;
 class RequestFactory extends Request implements RequestFactoryInterface
 {
     /**
-     * The factory to create an URI.
+     * The factory to create a URI.
      *
      * @var UriFactoryInterface
      */
-    protected $uriFactory;
+    protected UriFactoryInterface $uriFactory;
 
     /**
      * Creates a new request factory with the factory to create the URI from a string.
@@ -40,7 +40,7 @@ class RequestFactory extends Request implements RequestFactoryInterface
     public function createRequest(string $method, $uri): RequestInterface
     {
         $request = new Request();
-        // If the URI is given as a string it must be created using the factory.
+        // If the URI is given as a string, it must be created using the factory.
         if (!$uri instanceof UriInterface) {
             $uri = $this->uriFactory->createUri($uri);
         }

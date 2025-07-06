@@ -12,49 +12,49 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * Hold all given server parameters including data not set by the client directly.
      *
-     * @var array
+     * @var array<string, mixed>
      */
-    protected $serverParams = [];
+    protected array $serverParams = [];
 
     /**
      * All cookies sent by the client.
      *
-     * @var array
+     * @var array<string, string>
      */
-    protected $cookieParams = [];
+    protected array $cookieParams = [];
 
     /**
-     * All query (GET) parameters.
+     * All query parameters (GET).
      *
-     * @var array
+     * @var array<string, mixed>
      */
-    protected $queryParams = [];
+    protected array $queryParams = [];
 
     /**
      * All uploaded files.
      *
      * @var UploadedFileInterface[]
      */
-    protected $uploads = [];
+    protected array $uploads = [];
 
     /**
      * The parsed request body according to the content type of the request.
      *
-     * @var mixed
+     * @var array<mixed>|object|null
      */
     protected $parsedBody;
 
     /**
      * Contains the combined GET and POST parameters added by custom attributes from middleware.
      *
-     * @var array
+     * @var array<string, mixed>
      */
-    protected $attributes = [];
+    protected array $attributes = [];
 
     /**
      * Creates a new server request with fixed server params.
      *
-     * @param array $serverParams
+     * @param array<string, mixed> $serverParams
      */
     public function __construct(array $serverParams = [])
     {
@@ -64,7 +64,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * Returns the server params given to the constructor.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getServerParams(): array
     {
@@ -74,7 +74,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * Returns all cookies.
      *
-     * @return array
+     * @return array<string, string>
      */
     public function getCookieParams(): array
     {
@@ -84,9 +84,9 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * Sets new cookies on a new server request instance.
      *
-     * @param array $cookies
+     * @param array<string, string> $cookies
      *
-     * @return ServerRequestInterface|ServerRequest
+     * @return ServerRequestInterface
      */
     public function withCookieParams(array $cookies): ServerRequestInterface
     {
@@ -98,7 +98,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * Get all query (GET) parameters.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getQueryParams(): array
     {
@@ -108,9 +108,9 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * Sets new query parameters on a new server request instance. Attributes will be kept unchanged.
      *
-     * @param array $query
+     * @param array<string, mixed> $query
      *
-     * @return ServerRequestInterface|ServerRequest
+     * @return ServerRequestInterface
      */
     public function withQueryParams(array $query): ServerRequestInterface
     {
@@ -122,7 +122,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * Returns all uploaded files.
      *
-     * @return array
+     * @return UploadedFileInterface[]
      */
     public function getUploadedFiles(): array
     {
@@ -132,9 +132,9 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * Sets new uploaded files on a new server request instance.
      *
-     * @param array $uploadedFiles
+     * @param UploadedFileInterface[] $uploadedFiles
      *
-     * @return ServerRequestInterface|ServerRequest
+     * @return ServerRequestInterface
      */
     public function withUploadedFiles(array $uploadedFiles): ServerRequestInterface
     {
@@ -146,7 +146,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * Returns the parsed body.
      *
-     * @return array|object|null
+     * @return array<mixed>|object|null
      */
     public function getParsedBody()
     {
@@ -156,9 +156,9 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * Sets a new parsed body on a new server request instance. Attributes will be kept unchanged.
      *
-     * @param array|object $data
+     * @param array<mixed>|object|null $data
      *
-     * @return ServerRequestInterface|ServerRequest
+     * @return ServerRequestInterface
      */
     public function withParsedBody($data): ServerRequestInterface
     {
@@ -170,7 +170,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * Returns all attributes set for the request.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getAttributes(): array
     {
@@ -178,15 +178,15 @@ class ServerRequest extends Request implements ServerRequestInterface
     }
 
     /**
-     * Returns the value for exactly one attribute. If the attribute was not set the default is returned.
-     * The default is also return if the set attribute is falsify.
+     * Returns the value for exactly one attribute. If the attribute was not set, the default is returned.
+     * The default is also return if the set attribute falsifies.
      *
      * @param string $name
      * @param mixed  $default
      *
      * @return mixed|null
      */
-    public function getAttribute($name, $default = null)
+    public function getAttribute(string $name, $default = null)
     {
         return $this->attributes[$name] ?? $default;
     }
@@ -197,9 +197,9 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @param string $name
      * @param mixed  $value
      *
-     * @return ServerRequestInterface|ServerRequest
+     * @return ServerRequestInterface
      */
-    public function withAttribute($name, $value): ServerRequestInterface
+    public function withAttribute(string $name, $value): ServerRequestInterface
     {
         $request = clone $this;
         $request->attributes[$name] = $value;
@@ -211,9 +211,9 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @param string $name
      *
-     * @return ServerRequestInterface|ServerRequest
+     * @return ServerRequestInterface
      */
-    public function withoutAttribute($name): ServerRequestInterface
+    public function withoutAttribute(string $name): ServerRequestInterface
     {
         $request = clone $this;
         unset($request->attributes[$name]);

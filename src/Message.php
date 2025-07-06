@@ -13,32 +13,32 @@ class Message implements MessageInterface
     public const HEADER_HOST = 'host';
 
     /**
-     * The protocol version of the message. If implemented a reasonable default should be set.
+     * The protocol version of the message. If implemented, a reasonable default should be set.
      *
      * @var string
      */
-    protected $version = '0';
+    protected string $version = '0';
 
     /**
      * The headers of the message collected as an array of values for each header.
      *
-     * @var string[][]
+     * @var array<string, string[]>
      */
-    protected $headers = [];
+    protected array $headers = [];
 
     /**
      * The mapping of lowercase header names to the original names present in headers.
      *
      * @var string[]
      */
-    protected $mapper = [];
+    protected array $mapper = [];
 
     /**
      * The message body as a stream.
      *
      * @var StreamInterface
      */
-    protected $body;
+    protected StreamInterface $body;
 
     /**
      * Returns the current protocol version. This will only return 0 in all current implementations.
@@ -55,17 +55,17 @@ class Message implements MessageInterface
      *
      * @param string $version
      *
-     * @return MessageInterface|Message
+     * @return MessageInterface
      */
-    public function withProtocolVersion($version): MessageInterface
+    public function withProtocolVersion(string $version): MessageInterface
     {
         $message = clone $this;
-        $message->version = (string) $version;
+        $message->version = $version;
         return $message;
     }
 
     /**
-     * Returns all headers as an array of an array of values. The first level contains the names as keys.
+     * Returns all headers as a nested array of values. The first level contains the names as keys.
      *
      * @return string[][]
      */
@@ -81,9 +81,9 @@ class Message implements MessageInterface
      *
      * @return bool
      */
-    public function hasHeader($name): bool
+    public function hasHeader(string $name): bool
     {
-        // Since headers are case insensitive the mapper is used to check the insensitive name.
+        // Since headers are case-insensitive, the mapper is used to check the insensitive name.
         $name = strtolower($name);
         return isset($this->mapper[$name], $this->headers[$this->mapper[$name]]);
     }
@@ -95,14 +95,14 @@ class Message implements MessageInterface
      *
      * @return string[]
      */
-    public function getHeader($name) : array
+    public function getHeader(string $name) : array
     {
         // Use the lower name to represent the insensitive header.
         $name = strtolower($name);
         if (!$this->hasHeader($name)) {
             return [];
         }
-        // With the previous check of hasHeader the index must be accessible.
+        // With the previous check of hasHeader, the index must be accessible.
         return $this->headers[$this->mapper[$name]];
     }
 
@@ -113,20 +113,20 @@ class Message implements MessageInterface
      *
      * @return string
      */
-    public function getHeaderLine($name): string
+    public function getHeaderLine(string $name): string
     {
         return implode(',', $this->getHeader($name));
     }
 
     /**
-     * Sets a new header on a new message instance. The name will be stored as is but accessible as insensitive key.
+     * Sets a new header on a new message instance. The name will be stored as is but accessible as an insensitive key.
      *
      * @param string          $name
      * @param string|string[] $value
      *
-     * @return MessageInterface|Message
+     * @return MessageInterface
      */
-    public function withHeader($name, $value): MessageInterface
+    public function withHeader(string $name, $value): MessageInterface
     {
         // Allow a string to be set, but ensure to store values as an array.
         if (!is_array($value)) {
@@ -134,13 +134,14 @@ class Message implements MessageInterface
                 $value,
             ];
         }
-        // Use the lower variant to store a the mapping to the original name.
+        // Use the lower variant to store the mapping to the original name.
         // All other header functions will do the same when searching for a header given by name.
         $lowerName = strtolower($name);
-        // If the header was already set it needs to be unset with it's original name. Just replacing the name in
-        // the headers array would not help, if the names cases do not match.
+        // If the header was already set, it needs to be unset with its original name. Just replacing the name in
+        // the headers-array would not help if the names' cases do not match.
         if (isset($this->mapper[$lowerName])) {
             $message = $this->withoutHeader($lowerName);
+            assert($message instanceof self);
         } else {
             // The call to withoutHeader already cloned the message. So only do it here.
             $message = clone $this;
@@ -157,9 +158,9 @@ class Message implements MessageInterface
      * @param string          $name
      * @param string|string[] $value
      *
-     * @return MessageInterface|Message
+     * @return MessageInterface
      */
-    public function withAddedHeader($name, $value): MessageInterface
+    public function withAddedHeader(string $name, $value): MessageInterface
     {
         // Get the already set header.
         $header = $this->getHeader($name);
@@ -174,6 +175,7 @@ class Message implements MessageInterface
         }
         // Replace the header. Unset first to not duplicate the entry if called with differently cased names.
         $message = $this->withoutHeader($name);
+        assert($message instanceof self);
         $message->mapper[strtolower($name)] = $name;
         $message->headers[$name] = $header;
         return $message;
@@ -184,9 +186,9 @@ class Message implements MessageInterface
      *
      * @param string $name
      *
-     * @return MessageInterface|Message
+     * @return MessageInterface
      */
-    public function withoutHeader($name): MessageInterface
+    public function withoutHeader(string $name): MessageInterface
     {
         $message = clone $this;
         unset($message->mapper[strtolower($name)], $message->headers[$name]);
@@ -208,7 +210,7 @@ class Message implements MessageInterface
      *
      * @param StreamInterface $body
      *
-     * @return MessageInterface|Message
+     * @return MessageInterface
      */
     public function withBody(StreamInterface $body): MessageInterface
     {

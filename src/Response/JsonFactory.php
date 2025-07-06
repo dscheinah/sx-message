@@ -7,21 +7,25 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * The factory to create the Json helper. This is needed to get the PSR factories from the Injector.
+ * The factory to create the JSON helper. This is needed to get the PSR factories from the Injector.
  */
 class JsonFactory implements FactoryInterface
 {
     /**
-     * Creates a new Json helper with a response and stream factory.
+     * Creates a new JSON helper with a response and stream factory.
      *
      * @param Injector $injector
-     * @param array    $options
-     * @param string   $class
+     * @param array<mixed> $options
+     * @param string $class
      *
      * @return Json
      */
     public function create(Injector $injector, array $options, string $class): Json
     {
-        return new Json($injector->get(ResponseFactoryInterface::class), $injector->get(StreamFactoryInterface::class));
+        $responseFactory = $injector->get(ResponseFactoryInterface::class);
+        assert($responseFactory instanceof ResponseFactoryInterface);
+        $streamFactory = $injector->get(StreamFactoryInterface::class);
+        assert($streamFactory instanceof StreamFactoryInterface);
+        return new Json($responseFactory, $streamFactory);
     }
 }

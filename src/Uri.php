@@ -18,42 +18,42 @@ class Uri implements UriInterface
      *
      * @var string
      */
-    protected $scheme = '';
+    protected string $scheme = '';
 
     /**
      * The user of the provided login data.
      *
      * @var string
      */
-    protected $user = '';
+    protected string $user = '';
 
     /**
      * The password of the provided login data.
      *
-     * @var string
+     * @var string|null
      */
-    protected $pass = '';
+    protected ?string $pass = null;
 
     /**
      * The host part of the URL.
      *
      * @var string
      */
-    protected $host = '';
+    protected string $host = '';
 
     /**
      * The used port. Zero is mapped to default according to the set scheme.
      *
      * @var int
      */
-    protected $port = 0;
+    protected int $port = 0;
 
     /**
-     * To omit the port if it matches the set schemes default this mapping is used.
+     * To omit the port if it matches the set schemes default, this mapping is used.
      *
-     * @var array
+     * @var array<string, int>
      */
-    protected $portMapping = [
+    protected array $portMapping = [
         self::SCHEME_HTTP => 80,
         self::SCHEME_HTTPS => 443,
         self::SCHEME_FTP => 21,
@@ -64,24 +64,24 @@ class Uri implements UriInterface
      *
      * @var string
      */
-    protected $path = '';
+    protected string $path = '';
 
     /**
      * The query string of the URL.
      *
      * @var string
      */
-    protected $query = '';
+    protected string $query = '';
 
     /**
      * The fragment part of the URL.
      *
      * @var string
      */
-    protected $fragment = '';
+    protected string $fragment = '';
 
     /**
-     * Combines all set parts of the URI to a ready to use string.
+     * Combines all set parts of the URI to a "ready to use" string.
      *
      * @return string
      */
@@ -92,7 +92,7 @@ class Uri implements UriInterface
         $path = $this->getPath();
         $query = $this->getQuery();
         $fragment = $this->getFragment();
-        // If a scheme is set a colon must follow.
+        // If a scheme is set, a colon must follow.
         if ($scheme) {
             $scheme .= ':';
         }
@@ -104,14 +104,14 @@ class Uri implements UriInterface
             // The path must only start with one leading slash.
             $path = '/' . ltrim($path, '/');
         } elseif ($authority) {
-            // If an authority is present the path must be separated with a slash.
+            // If an authority is present, the path must be separated with a slash.
             $path = '/' . $path;
         }
-        // The query does not contain the leading question mark so it must be prepended.
+        // The query does not contain the leading question mark, so it must be prepended.
         if ($query) {
             $query = '?' . $query;
         }
-        // The fragment does not contain the leading hash sign so it must be prepended.
+        // The fragment does not contain the leading hash sign, so it must be prepended.
         if ($fragment) {
             $fragment = '#' . $fragment;
         }
@@ -139,7 +139,7 @@ class Uri implements UriInterface
         $host = $this->getHost();
         $user = $this->getUserInfo();
         $port = $this->getPort();
-        // User information must be separated with an at from the host part.
+        // User information must be separated with an "at" from the host part.
         if ($user) {
             $user .= '@';
         }
@@ -223,9 +223,9 @@ class Uri implements UriInterface
      *
      * @param string $scheme
      *
-     * @return UriInterface|Uri
+     * @return UriInterface
      */
-    public function withScheme($scheme): UriInterface
+    public function withScheme(string $scheme): UriInterface
     {
         $uri = clone $this;
         $uri->scheme = strtolower($scheme);
@@ -235,12 +235,12 @@ class Uri implements UriInterface
     /**
      * Sets user and password on a new uri instance.
      *
-     * @param string      $user
+     * @param string $user
      * @param string|null $password
      *
-     * @return UriInterface|Uri
+     * @return UriInterface
      */
-    public function withUserInfo($user, $password = null): UriInterface
+    public function withUserInfo(string $user, ?string $password = null): UriInterface
     {
         $uri = clone $this;
         $uri->user = $user;
@@ -253,9 +253,9 @@ class Uri implements UriInterface
      *
      * @param string $host
      *
-     * @return UriInterface|Uri
+     * @return UriInterface
      */
-    public function withHost($host): UriInterface
+    public function withHost(string $host): UriInterface
     {
         $uri = clone $this;
         $uri->host = $host;
@@ -267,7 +267,7 @@ class Uri implements UriInterface
      *
      * @param int $port
      *
-     * @return UriInterface|Uri
+     * @return UriInterface
      */
     public function withPort($port): UriInterface
     {
@@ -281,9 +281,9 @@ class Uri implements UriInterface
      *
      * @param string $path
      *
-     * @return UriInterface|Uri
+     * @return UriInterface
      */
-    public function withPath($path): UriInterface
+    public function withPath(string $path): UriInterface
     {
         $uri = clone $this;
         $uri->path = $path;
@@ -295,9 +295,9 @@ class Uri implements UriInterface
      *
      * @param string $query
      *
-     * @return UriInterface|Uri
+     * @return UriInterface
      */
-    public function withQuery($query): UriInterface
+    public function withQuery(string $query): UriInterface
     {
         $uri = clone $this;
         $uri->query = $query;
@@ -309,9 +309,9 @@ class Uri implements UriInterface
      *
      * @param string $fragment
      *
-     * @return UriInterface|Uri
+     * @return UriInterface
      */
-    public function withFragment($fragment): UriInterface
+    public function withFragment(string $fragment): UriInterface
     {
         $uri = clone $this;
         $uri->fragment = $fragment;
