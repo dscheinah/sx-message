@@ -96,6 +96,8 @@ class StreamTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $this->stream->write($string);
+
+        @unlink($file);
     }
 
     public function testIsReadable(): void
