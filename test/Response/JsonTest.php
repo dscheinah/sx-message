@@ -17,6 +17,10 @@ class JsonTest extends TestCase
             self::assertEquals(204, $response->getStatusCode());
             self::assertEquals('""', (string) $response->getBody());
 
+            $response = $json->create(200, []);
+            self::assertEquals(200, $response->getStatusCode());
+            self::assertEquals('[]', (string) $response->getBody());
+
             $payload = ['test' => 1];
             $response = $json->create(200, $payload);
             self::assertEquals(200, $response->getStatusCode());

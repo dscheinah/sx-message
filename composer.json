@@ -5,6 +5,7 @@
     "license": "GPL-3.0-or-later",
     "require": {
         "php": "^7.4|^8.0",
+        "ext-json": "*",
         "psr/http-message": "^2.0",
         "dscheinah/sx-container": "^1.0",
         "psr/http-factory": "^1.0"

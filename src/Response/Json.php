@@ -50,7 +50,7 @@ class Json implements ResponseHelperInterface
      */
     public function create(int $code, $response = null): ResponseInterface
     {
-        $json = json_encode($response ?: '', JSON_THROW_ON_ERROR);
+        $json = json_encode($response ?? '', JSON_THROW_ON_ERROR);
         return $this->responseFactory->createResponse($code)
             ->withAddedHeader('Content-Type', 'application/json')
             ->withBody($this->streamFactory->createStream($json));
